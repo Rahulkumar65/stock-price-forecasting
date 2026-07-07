@@ -1,0 +1,89 @@
+=================================================================
+STEP 1: LOADING REAL HISTORICAL STOCK DATA (AAPL)
+=================================================================
+Rows: 6081  |  Date range: 1984-09-07 to 2008-10-14
+Columns: ['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Adj Close']
+
+First 5 rows:
+        Date   Open   High    Low  Close   Volume  Adj Close
+0 1984-09-07  26.50  26.87  26.25  26.50  2981600       3.02
+1 1984-09-10  26.50  26.62  25.87  26.37  2346400       3.01
+2 1984-09-11  26.62  27.37  26.62  26.87  5444000       3.07
+3 1984-09-12  26.87  27.00  26.12  26.12  4773600       2.98
+4 1984-09-13  27.50  27.62  27.50  27.50  7429600       3.14
+
+=================================================================
+STEP 2: FEATURE ENGINEERING (TECHNICAL INDICATORS)
+=================================================================
+Engineered 15 indicator features.
+Rows available after dropping NaNs from rolling windows: 6061
+
+=================================================================
+STEP 3: EXPLORATORY VISUALIZATION
+=================================================================
+Saved chart: technical_indicators.png
+
+=================================================================
+STEP 4: TIME-AWARE TRAIN/TEST SPLIT
+=================================================================
+Train: 5151 days (1984-10-04 to 2005-03-03)
+Test:  910 days (2005-03-04 to 2008-10-13)
+Note: test set is strictly AFTER training data in time — simulates predicting the unseen future.
+
+=================================================================
+STEP 5: MODEL TRAINING
+=================================================================
+Trained: Linear Regression
+Trained: Random Forest
+Trained: Gradient Boosting
+
+=================================================================
+STEP 6: MODEL EVALUATION
+=================================================================
+
+--- Linear Regression ---
+RMSE: $3.14   MAE: $2.08   MAPE: 2.04%   Directional Accuracy: 73.7%
+
+--- Random Forest ---
+RMSE: $19.92   MAE: $10.52   MAPE: 7.03%   Directional Accuracy: 60.4%
+
+--- Gradient Boosting ---
+RMSE: $19.72   MAE: $10.52   MAPE: 7.09%   Directional Accuracy: 63.1%
+
+Summary table:
+            Model      RMSE       MAE     MAPE  Directional_Accuracy
+Linear Regression  3.139597  2.081820 2.040878             73.736264
+    Random Forest 19.919309 10.518649 7.033983             60.439560
+Gradient Boosting 19.724697 10.524680 7.086997             63.076923
+
+Saved chart: actual_vs_predicted.png (best model: Linear Regression)
+
+=================================================================
+STEP 7: WALK-FORWARD REAL-TIME SIMULATION (last 60 trading days)
+=================================================================
+Walk-forward RMSE over last 30 days: $7.56
+Walk-forward directional accuracy: 70.0%
+(Model is retrained fresh at every step using only past data — zero lookahead bias.)
+Saved chart: walk_forward_simulation.png
+
+=================================================================
+STEP 8: FEATURE IMPORTANCE (Random Forest)
+=================================================================
+Low              0.547518
+High             0.374413
+Open             0.046949
+SMA_5            0.010311
+EMA_10           0.006952
+Close_lag_1      0.004020
+SMA_20           0.003542
+Close_lag_2      0.002414
+Close_lag_3      0.001107
+Volatility_10    0.000767
+BB_width         0.000434
+Volume_change    0.000408
+MACD_signal      0.000279
+RSI_14           0.000260
+Volume           0.000248
+MACD             0.000195
+Close_lag_5      0.000181
+Saved chart: feature_importance.png
